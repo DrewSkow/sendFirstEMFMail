@@ -2,6 +2,7 @@ const switchButton = document.getElementById("switchButton");
 const textarea = document.querySelector("textarea");
 const number = document.querySelector(".number");
 const ladyId = document.getElementById("w_id_i");
+const port = chrome.runtime.connect({name: "exchangeData"});
 switchButton.addEventListener("click", e => {
     chrome.storage.local.set({switcher: e.target.checked})
 })
@@ -22,7 +23,7 @@ textarea.addEventListener("blur", e => {
 
 const sendButton = document.querySelector(".sendButton");
 sendButton.addEventListener('click', () => {
-    chrome.storage.local.get("message", v => console.log(v.message));
+    port.postMessage({method: "openTab", url: "http://www.charmdate.com/clagt/first_emf.php"})
 })
 
 
