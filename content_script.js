@@ -10,7 +10,7 @@ const runSrc = () => {
     const pathname = document.location.pathname;
 
     if(pathname == '/clagt/woman/women_profiles_allow_edit.php') { 
-        document.location.href = "http://www.charmdate.com/clagt/first_emf.php";
+        document.location.href = "http://www.charmdate.com/clagt/first_emf.php?groupshow=4";
     }
 
     if(pathname == '/clagt/emf_error.php'){
@@ -67,7 +67,17 @@ const runSrc = () => {
         const area = document.getElementById("TextArea1");
     
         chrome.storage.local.get([manId, "message"], v => {
-            area.value = v.message.replace("{country}", v[manId].country).replace("{name}", v[manId].name);
+            let mess = v.message;
+            console.log(mess);
+            do{
+                mess = mess.replace("{country}", v[manId].country)
+            } while (mess.indexOf("{country}")>-1)
+
+            do{
+                mess = mess.replace("{name}", v[manId].name);
+            } while (mess.indexOf("{name}")>-1)
+
+            area.value = mess;
         })
     
         function getRandomInt(min, max) {
@@ -78,6 +88,32 @@ const runSrc = () => {
         const gift = document.querySelector("#content_list").children;
     
         gift[getRandomInt(0, gift.length)].click();
+
+        const setVideo = () => {
+            document.querySelectorAll(".x-btn-center")[0].click();
+
+            setTimeout(()=>{
+                const albums = document.querySelectorAll(".x-panel-body")[3].children[0];
+                let isSelected = false
+                albums.querySelectorAll(".thumb").forEach((item,id) => {
+                    const data = item.innerText.split("\n")
+                    data[1] == "first emf mail" && (isSelected = true);
+                    data[1] == "first emf mail" && item.click();
+                })
+                
+                if(isSelected){
+                    setTimeout(() => {
+                        const videos = document.querySelectorAll(".x-panel-body")[2].children[0].children;
+                        videos[getRandomInt(0,videos.length)].click();
+                        document.querySelectorAll(".x-btn-center")[9].click();
+                    }, 500) 
+                } else {
+                    alert("не добавлено видео. нет альбома 'first emf mail'");
+                    document.querySelectorAll(".x-btn-center")[10].click();
+                }
+            },500)
+
+        }
         
         const setFreePhoto = () => {
             setTimeout(() => {
@@ -95,38 +131,49 @@ const runSrc = () => {
                         photos[getRandomInt(0,photos.length)].click();
                         document.querySelectorAll(".x-btn-center")[5].click();
                     }, 500)
-                }, 1500);
+                }, 1000);
             }, 1500)
         }
     
         const setPrivatePhoto = () => {
             document.querySelectorAll(".x-btn-center")[2].click();
-    
+            let check = false;
             setTimeout(()=>{
-                const albums = document.querySelectorAll(".x-panel-body")[3].children[0];
+                const albums = document.querySelectorAll(".x-panel-body")[5].children[0];
                 albums.querySelectorAll(".thumb").forEach((item,id) => {
                     const data = item.innerText.split("\n")
-                    data[1] == "First EMF mail" && item.click();
+                    data[1] == "first emf mail" && (check = true);
+                    data[1] == "first emf mail" && item.click();
                 })
-                setTimeout(() => {
-                    const photos = document.querySelectorAll(".x-panel-body")[2].children[0].children;
-                    photos[getRandomInt(0,photos.length)].click();
-                    document.querySelectorAll(".x-btn-center")[9].click();
-                    if(document.getElementById("private_attachfileImages").children.length<2){
-                        setPrivatePhoto()
-                    } else {
-                        console.timeEnd("a");
-                       // document.getElementsByName("messagesub")[0].click();
-                    }
-                }, 500) 
+                if(check){
+                    setTimeout(() => {
+                        const photos = document.querySelectorAll(".x-panel-body")[4].children[0].children;
+                        photos[getRandomInt(0,photos.length)].click();
+                        document.querySelectorAll(".x-btn-center")[13].click();
+                        if(document.getElementById("private_attachfileImages").children.length<2){
+                            setPrivatePhoto()
+                        } else {
+                            console.timeEnd("a");
+                           // document.getElementsByName("messagesub")[0].click();
+                        }
+                    }, 500) 
+                } else {
+                    alert("не добавлены приватные фото. нет альбома 'first emf mail'");
+                    document.querySelectorAll(".x-btn-center")[14].click()
+                }
+
             },500)
         }
     
         setFreePhoto();
+
+        setTimeout(() => {
+            setVideo();
+        },3500)
     
         setTimeout(() => {
             setPrivatePhoto();
-        },4000)
+        },6000)
     }
 }
 
