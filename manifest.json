@@ -2,7 +2,7 @@
     "manifest_version": 3,
     "name": "Say Hi for man",
     "description" : "Script for sending 'hi' messages for men",
-    "version" : "0.0.1",
+    "version" : "1.0.0",
     "author": "Drew Skow",
     "content_scripts": [
         {
