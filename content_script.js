@@ -164,6 +164,7 @@ const runSrc = () => {
                             
                         } else {
                             document.querySelector("form").onsubmit = true;
+                            chrome.storage.local.remove(manId);
                             document.getElementsByName("messagesub")[0].click();
                         }
                     }, 1000) 
