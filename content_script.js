@@ -21,6 +21,7 @@ const runSrc = () => {
         if(!!document.location.href.match(regexW)){
             const table = document.getElementById("DataGrid1").children[1]
             const tableData = table.querySelectorAll("tr");
+            const nextButton = document.querySelectorAll("table")[31].children[0].children[0].children[1].children[3].children[0];
             if(tableData.length>1){
                 let i = 1;
                 let loop = setInterval(() => {
@@ -29,8 +30,13 @@ const runSrc = () => {
                         const url = item.children[5].children[0].href;
                         port.postMessage({method: "openTab", url}) 
                     }
-                    if(i===tableData.length){
+                    if(i===tableData.length-1){
                         clearInterval(loop);
+                        if(!!nextButton){
+                            nextButton.click();
+                        } else {
+                            alert("all messages sended");
+                        }
                     }
                     i++;
                 }, 12000);
@@ -154,7 +160,7 @@ const runSrc = () => {
                             setPrivatePhoto()
                         } else {
                             console.timeEnd("a");
-                           // document.getElementsByName("messagesub")[0].click();
+                           document.getElementsByName("messagesub")[0].click();
                         }
                     }, 500) 
                 } else {
