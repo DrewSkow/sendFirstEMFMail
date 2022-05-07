@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
-    "name": "Say Hi for man",
-    "description" : "Script for sending 'hi' messages for men",
+    "name": "Send First EMF Mail",
+    "description" : "Script for sending first EMF Mail",
     "version" : "1.0.0",
     "author": "Drew Skow",
     "content_scripts": [
