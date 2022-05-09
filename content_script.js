@@ -229,7 +229,6 @@ const runSrc = () => {
                 setTimeout(sendForm, 1000);
             }
         }
-        document.querySelector("form").onsubmit = function onsubmit(e){javascript:return true}
         setAttachment("Video");
 
 
@@ -240,8 +239,18 @@ const runSrc = () => {
         sendForm();
     }
 
+    const checkSended = () => {
+        const div = document.querySelector(".STYLE1");
+        if(!!div){
+            div.innerText.indexOf("The mail has been sent successfully!") > -1 && port.postMessage({method: "closeTab"});
+        } else {
+            setTimeout(checkSended, 500);
+        }
+        
+    }
+
     if(pathname == '/clagt/emf_sender6.php'){
-        port.postMessage({method: "closeTab"});
+        checkSended();
     }
 }
 
