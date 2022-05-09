@@ -23,7 +23,7 @@ textarea.addEventListener("blur", e => {
 
 const sendButton = document.querySelector(".sendButton");
 sendButton.addEventListener('click', () => {
-    port.postMessage({method: "openTab", url: "http://www.charmdate.com/clagt/first_emf.php?groupshow=4"})
+    port.postMessage({method: "openFirstTab", url: "http://www.charmdate.com/clagt/first_emf.php?groupshow=4"})
 })
 
 
