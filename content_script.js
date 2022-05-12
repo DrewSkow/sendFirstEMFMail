@@ -16,22 +16,44 @@ const runSrc = () => {
     if(pathname == '/clagt/emf_error.php'){
         port.postMessage({method: "closeTab"});
     }
+    let startFrom = 0;
+    let checkLast = false
+    const checkLastFunc = (tableData) => {
+        chrome.storage.local.get(["lastId", "lastPage"], v => {
+            if(!!v.lastId){
+                checkLast=true;
+                const thisPage = +document.querySelectorAll("table")[31].children[0].children[0].children[1].children[0].innerText.split(" ")[1];
+                if(thisPage == v.lastPage){
+                    for(let i = 1;i<tableData.length; i++){
+                        const item = tableData[i];
+                        item.children[1].innerText.split('(')[0] == v.lastId && (startFrom = i);
+                    }
+                }
+            }
+            else {checkLast=true};
+        })
+    }
 
     if(pathname == '/clagt/first_emf.php'){
         if(!!document.location.href.match(regexW)){
+
             const table = document.getElementById("DataGrid1").children[1]
             const tableData = table.querySelectorAll("tr");
             const nextButton = document.querySelectorAll("table")[31].children[0].children[0].children[1].children[3].children[0];
-            
+            checkLastFunc(tableData);
             const openTab = (i) => {
                 if(tableData.length>1){
+
                     const item = tableData[i];
+
                     if(item.children[5].innerText == 'Send Another Mail'){
                         const url = item.children[5].children[0].href;
                         port.postMessage({method: "openTab", url}) 
                     }
                     if(i===tableData.length-1){
                         if(!!nextButton){
+                            const lastPage = +document.querySelectorAll("table")[31].children[0].children[0].children[1].children[0].innerText.split(" ")[1];
+                            chrome.storage.local.set({lastPage: lastPage+1});
                             nextButton.click();
                         } else {
                             alert("all messages sended");
@@ -40,21 +62,29 @@ const runSrc = () => {
                 }
             }
             let i = 1;
-            const checkTab = () => {
-                chrome.storage.local.get("tabIsOpen", v => {
-                    if(!v.tabIsOpen){
-                        openTab(i);
-                        i++;
+            const startScr = () => {
+                if(startFrom != 0){
+                    i=startFrom;
+                }
+                if(checkLast){
+                    const checkTab = () => {
+                        chrome.storage.local.get("tabIsOpen", v => {
+                            if(!v.tabIsOpen){
+                                openTab(i);
+                                i++;
+                            }
+                        })
                     }
-                })
+                    openTab(i);
+                    i++;
+                    setInterval(()=>{
+                        checkTab();
+                    }, 1000)
+                } else {
+                    setTimeout(startScr, 500);
+                }
             }
-            openTab(i);
-            i++;
-            setInterval(()=>{
-                checkTab();
-            }, 1000)
-
-
+            startScr();
 
         } else {
             chrome.storage.local.get("w_id", v => {
@@ -81,6 +111,7 @@ const runSrc = () => {
         document.getElementsByName("messagesub")[0].click()
     }
     
+
     if(pathname == '/clagt/emf_sender4.php'){
         const manId = document.querySelectorAll(".nor")[0].innerText;
         const area = document.getElementById("TextArea1");
@@ -224,7 +255,7 @@ const runSrc = () => {
             if(setPrivatePhoto){
                 chrome.storage.local.remove(manId);
                 document.querySelector("form").submit(true);
-                // document.getElementsByName("messagesub")[0].click();
+                chrome.storage.local.set({lastId: manId});
             } else {
                 setTimeout(sendForm, 1000);
             }
@@ -242,7 +273,9 @@ const runSrc = () => {
     const checkSended = () => {
         const div = document.querySelector(".STYLE1");
         if(!!div){
-            div.innerText.indexOf("The mail has been sent successfully!") > -1 && port.postMessage({method: "closeTab"});
+            setTimeout(() => {
+                div.innerText.indexOf("The mail has been sent successfully!") > -1 && port.postMessage({method: "closeTab"});
+            },1500)
         } else {
             setTimeout(checkSended, 500);
         }

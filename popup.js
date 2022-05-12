@@ -23,9 +23,14 @@ textarea.addEventListener("blur", e => {
 
 const sendButton = document.querySelector(".sendButton");
 sendButton.addEventListener('click', () => {
-    port.postMessage({method: "openFirstTab", url: "http://www.charmdate.com/clagt/first_emf.php?groupshow=4"})
+    chrome.storage.local.remove(["lastId", "lastPage"]);
+    port.postMessage({method: "openFirstTab", url: "http://www.charmdate.com/clagt/first_emf.php?groupshow=4"});
 })
 
+const continueSend = document.querySelector(".continueSend");
+continueSend.addEventListener('click', () => {
+    port.postMessage({method: "openFirstTab", url: "http://www.charmdate.com/clagt/first_emf.php?groupshow=4"});
+})
 
 ladyId.addEventListener("input", e => {
     chrome.storage.local.set({w_id: e.target.value});
