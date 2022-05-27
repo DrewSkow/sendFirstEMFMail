@@ -217,7 +217,7 @@ const runSrc = () => {
                 contentIndex = 4;
             }
 
-            const btn = document.querySelectorAll(".x-btn-center")[buttonIndex];
+        const btn = document.querySelectorAll(".x-btn-center")[buttonIndex];
             if(!btn){
                 setTimeout(() => {
                     setAttachment(method);
